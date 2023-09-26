@@ -1,6 +1,6 @@
-import './App.css';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import Navbar from './components/Navbar';
 
 function App() {
   const [contacts, setContacts] = useState([]);
@@ -13,9 +13,7 @@ function App() {
   }, []);
   return (
     <>
-      <nav>
-        <
-      </nav>
+      <Navbar />
       Hello, world!
     </>
   )
