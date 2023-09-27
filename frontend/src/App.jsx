@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
+import ContactList from './components/ContactList';
 
 function App() {
   const [contacts, setContacts] = useState([]);
@@ -14,7 +15,7 @@ function App() {
   return (
     <>
       <Navbar />
-      Hello, world!
+      <ContactList contacts={contacts} />
     </>
   )
 }
