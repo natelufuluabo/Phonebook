@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
-import ContactList from './components/ContactList';
+// import ContactList from './components/ContactList';
+import AddContactForm from './components/AddContactForm';
 
 function App() {
   const [contacts, setContacts] = useState([]);
@@ -15,7 +16,8 @@ function App() {
   return (
     <>
       <Navbar />
-      <ContactList contacts={contacts} />
+      {/* <ContactList contacts={contacts} /> */}
+      <AddContactForm contacts={contacts} setContacts={setContacts} />
     </>
   )
 }
