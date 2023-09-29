@@ -33,6 +33,10 @@ export default function AddContactForm({ contacts, setContacts }) {
     const handleFormSubmission = async (event) => {
         event.preventDefault();
         await saveNewContact();
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = false;
+        })
         setFormData({
             first_name: "",
             last_name: "",
