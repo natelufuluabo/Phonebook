@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import "../app.scss";
 import { useState } from "react";
 export default function ContactList({ contacts }) {
     contacts.sort((a, b) => {
@@ -14,10 +15,10 @@ export default function ContactList({ contacts }) {
         return contact.groups.includes(filter);
     })
     return (
-        <div className='mx-auto pt-5 px-5 overflow-scroll h-75 w-75 d-flex flex-column gap-3'>
+        <div className='mx-auto pt-5 px-2 overflow-scroll d-flex flex-column gap-3 listContainer'>
             <h2>All Contacts</h2>
             <div className="d-flex align-items-center gap-2">
-                <p>Show : </p>
+                <p className="m-0">Show : </p>
                 <div className="dropdown">
                     <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {filter}
