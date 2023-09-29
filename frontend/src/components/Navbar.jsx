@@ -12,9 +12,6 @@ export default function Navbar() {
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="#"><i className="fa-solid fa-user"></i> Contacts</a>
               </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#"><i className="fa-solid fa-user-group"></i> Groups</a>
-              </li>
             </ul>
           </div>
         </div>
