@@ -25,7 +25,7 @@ function App() {
       <Navbar />
       {/* <ContactList contacts={contacts} /> */}
       {/* <AddContactForm contacts={contacts} setContacts={setContacts} /> */}
-      <ContactCard contact={contact} />
+      <ContactCard contact={contact} setContact={setContact} />
     </>
   )
 }

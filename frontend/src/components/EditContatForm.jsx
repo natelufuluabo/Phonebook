@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
+import axios from "axios";
 import "../app.scss";
 
-export default function EditContatForm({ contact, setEditing }) {
+export default function EditContatForm({ contact, setEditing, setContact }) {
     const [formData, setFormData] = useState(contact);
     console.log(formData);
     const handleIputChange = (event) => {
@@ -26,23 +27,27 @@ export default function EditContatForm({ contact, setEditing }) {
             return
         }
     }
+    const updateContact = async () => {
+        const response = await axios.put(`http://localhost:3001/contacts/${contact.id}`, formData);
+        setContact(response.data);
+    }
     const handleFormSubmission = async (event) => {
         event.preventDefault();
-        console.log(formData);
+        await updateContact();
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = false;
+        })
+        setFormData({
+            first_name: "",
+            last_name: "",
+            email: "",
+            city: "",
+            province: "",
+            groups: [],
+            phone_number: ""
+        });
         setEditing(false);
-        // const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        // checkboxes.forEach((checkbox) => {
-        //     checkbox.checked = false;
-        // })
-        // setFormData({
-        //     first_name: "",
-        //     last_name: "",
-        //     email: "",
-        //     city: "",
-        //     province: "",
-        //     groups: [],
-        //     phone_number: ""
-        // });
     };
     return (
         <div className="container pt-4 formContainer">

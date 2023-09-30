@@ -3,7 +3,7 @@ import "../app.scss";
 import { useState } from "react";
 import EditContatForm from "./EditContatForm";
 
-export default function ContactCard({ contact }) {
+export default function ContactCard({ contact, setContact }) {
     const [editing, setEditing] = useState(false);
     return (
         <>
@@ -27,7 +27,7 @@ export default function ContactCard({ contact }) {
                     </div>
                 </div>
             }
-            { editing && <EditContatForm contact={contact} setEditing={setEditing} /> }
+            { editing && <EditContatForm contact={contact} setEditing={setEditing} setContact={setContact} /> }
         </>
     )
 }
