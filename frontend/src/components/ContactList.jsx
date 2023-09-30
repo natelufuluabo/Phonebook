@@ -38,7 +38,7 @@ export default function ContactList({ contacts }) {
                     <button className="btn btn-info">+<i className="fa-solid fa-user"></i></button> 
                 </a>
             </div>
-            <ul className="list-group list-group-flush">
+            <ul className="list-group list-group-flush overflow-scroll">
                 {
                     contactsToShow.map(contact => {
                     return (
