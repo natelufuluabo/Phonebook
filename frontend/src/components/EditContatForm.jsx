@@ -1,21 +1,21 @@
 /* eslint-disable react/prop-types */
+import { useState, useEffect } from "react";
 import "../app.scss";
-import { useState } from "react";
-import axios from "axios";
 
-export default function AddContactForm({ contacts, setContacts }) {
-    const [formData, setFormData] = useState({
-        first_name: "",
-        last_name: "",
-        email: "",
-        city: "",
-        province: "",
-        groups: [],
-        phone_number: ""
-    });
+export default function EditContatForm({ contact, setEditing }) {
+    const [formData, setFormData] = useState(contact);
+    console.log(formData);
     const handleIputChange = (event) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
+    useEffect(() => {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach((checkbox) => {
+            for (let i = 0; i < contact.groups.length; i++) {
+                if (contact.groups[i] === checkbox.value) checkbox.checked = true;
+            }
+        })
+    }, [contact.groups])
     const handleCheckboxChange = (event) => {
         if (event.target.checked) {
             setFormData({ ...formData, groups: [ ...formData.groups, event.target.value ] });
@@ -26,30 +26,27 @@ export default function AddContactForm({ contacts, setContacts }) {
             return
         }
     }
-    const saveNewContact = async () => {
-        const response = await axios.post("http://localhost:3001/contacts", formData);
-        setContacts(contacts.concat(response.data))
-    }
     const handleFormSubmission = async (event) => {
         event.preventDefault();
-        await saveNewContact();
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach((checkbox) => {
-            checkbox.checked = false;
-        })
-        setFormData({
-            first_name: "",
-            last_name: "",
-            email: "",
-            city: "",
-            province: "",
-            groups: [],
-            phone_number: ""
-        });
+        console.log(formData);
+        setEditing(false);
+        // const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        // checkboxes.forEach((checkbox) => {
+        //     checkbox.checked = false;
+        // })
+        // setFormData({
+        //     first_name: "",
+        //     last_name: "",
+        //     email: "",
+        //     city: "",
+        //     province: "",
+        //     groups: [],
+        //     phone_number: ""
+        // });
     };
     return (
         <div className="container pt-4 formContainer">
-            <h2>Add New Contact</h2>
+            <h2>Edit Contact</h2>
             <form onSubmit={handleFormSubmission}>
                 <div className="mb-3">
                     <label htmlFor="firstName" className="form-label">First Name</label>
@@ -127,7 +124,7 @@ export default function AddContactForm({ contacts, setContacts }) {
                     <input onChange={handleIputChange} value={formData.phone_number} type="tel" className="form-control" name="phone_number" id="phoneNumber" placeholder="Enter your phone number" required/>
                 </div>
 
-                <button type="submit" className="btn btn-primary">Submit</button>
+                <button type="submit" className="btn btn-primary">Save</button>
             </form>
         </div>
     )
