@@ -326,7 +326,7 @@ router.put('/contacts/:id', function(req, res, next) {
     const id = Number(req.params.id);
     const body = req.body;
     data = data.map((contact) => contact.id !== id ? contact : body);
-    res.json(data);
+    res.json(body);
 });
 
 module.exports = router;
