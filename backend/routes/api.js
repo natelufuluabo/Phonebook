@@ -288,24 +288,24 @@ let data = [
     }
 ]
 
-router.get('/persons', function(req, res, next) {
+router.get('/contacts', function(req, res, next) {
   res.json(data);
 });
 
-router.get('/persons/:id', function(req, res, next) {
+router.get('/contacts/:id', function(req, res, next) {
   const id = Number(req.params.id);
   const person = data.find(person => person.id === id);
   if (person) return res.status(200).json(person);
   return res.status(404).send("Error 404: Not Found");
 });
 
-router.delete('/persons/:id', function(req, res, next) {
+router.delete('/contacts/:id', function(req, res, next) {
   const id = Number(req.params.id);
   data = data.filter(person => person.id !== id);
   res.json(data);
 });
 
-router.post('/persons', function(req, res, next) {
+router.post('/contacts', function(req, res, next) {
   const body = req.body;
   if (!body.email || !body.phone_number) {
     return res.status(400).json({
@@ -320,6 +320,13 @@ router.post('/persons', function(req, res, next) {
   const newData = { "id": Math.floor(Math.random() * 100) + 1, ...body }
   data.push(newData);
   res.json(newData);
+});
+
+router.put('/contacts/:id', function(req, res, next) {
+    const id = Number(req.params.id);
+    const body = req.body;
+    data = data.map((contact) => contact.id !== id ? contact : body);
+    res.json(data);
 });
 
 module.exports = router;
