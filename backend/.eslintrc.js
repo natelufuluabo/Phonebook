@@ -1,12 +1,10 @@
 module.exports = {
   'env': {
-    'browser': true,
+    'commonjs': true,
     'es2021': true,
+    'node': true,
   },
-  'extends': [
-    'google',
-    'plugin:react/recommended',
-  ],
+  'extends': 'google',
   'overrides': [
     {
       'env': {
@@ -22,11 +20,7 @@ module.exports = {
   ],
   'parserOptions': {
     'ecmaVersion': 'latest',
-    'sourceType': 'module',
   },
-  'plugins': [
-    'react',
-  ],
   'rules': {
   },
 };

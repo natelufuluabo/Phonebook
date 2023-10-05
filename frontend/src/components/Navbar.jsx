@@ -1,3 +1,6 @@
+/* eslint-disable max-len */
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable require-jsdoc */
 
 export default function Navbar() {
   return (
@@ -16,5 +19,5 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
-  )
+  );
 }
