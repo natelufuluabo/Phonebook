@@ -12,8 +12,7 @@ var app = express();
 dotenv.config();
 
 const mongoose = require('mongoose');
-const url = `mongodb+srv://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@phonebook.yzrrcfv.mongodb.net/PhoneBookApp?retryWrites=true&w=majority`
-mongoose.set('strictQuery',false)
+const url = `${process.env.MONGODB_URI}`
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
