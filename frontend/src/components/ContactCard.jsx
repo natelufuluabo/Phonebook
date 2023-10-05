@@ -2,9 +2,14 @@
 import "../app.scss";
 import { useState } from "react";
 import EditContatForm from "./EditContatForm";
+import axios from "axios";
 
 export default function ContactCard({ contact, setContact }) {
     const [editing, setEditing] = useState(false);
+    const handleDelete = async () => {
+        const response = await axios.delete(`http://localhost:3000/api/contacts/${contact._id}`);
+        console.log(response.data);
+    }
     return (
         <>
             {
@@ -21,7 +26,7 @@ export default function ContactCard({ contact, setContact }) {
                         <p className="cardText m-0"><span><strong>Groups:</strong> {contact.groups.join(", ")}</span></p>
                         <p className="cardText m-0"><span><strong>Phone:</strong> {contact.phone_number}</span></p>
                         <div className="d-flex align-items-center gap-2">
-                            <button className="btn btn-danger">Delete</button>
+                            <button onClick={handleDelete} className="btn btn-danger">Delete</button>
                             <button onClick={() => setEditing(true)} className="btn btn-info">Edit</button>
                         </div>
                     </div>

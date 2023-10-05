@@ -5,7 +5,6 @@ import "../app.scss";
 
 export default function EditContatForm({ contact, setEditing, setContact }) {
     const [formData, setFormData] = useState(contact);
-    console.log(formData);
     const handleIputChange = (event) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
@@ -28,7 +27,7 @@ export default function EditContatForm({ contact, setEditing, setContact }) {
         }
     }
     const updateContact = async () => {
-        const response = await axios.put(`http://localhost:3001/contacts/${contact.id}`, formData);
+        const response = await axios.put(`http://localhost:3000/api/contacts/${contact._id}`, formData);
         setContact(response.data);
     }
     const handleFormSubmission = async (event) => {

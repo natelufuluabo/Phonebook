@@ -3,6 +3,7 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const dotenv = require('dotenv');
+const cors = require('cors')
 
 var indexRouter = require('./routes/index');
 var apiRouter = require('./routes/api');
@@ -10,6 +11,7 @@ var apiRouter = require('./routes/api');
 var app = express();
 
 dotenv.config();
+app.use(cors());
 
 const mongoose = require('mongoose');
 const url = `${process.env.MONGODB_URI}`

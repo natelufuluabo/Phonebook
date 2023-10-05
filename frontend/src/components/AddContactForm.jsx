@@ -27,7 +27,7 @@ export default function AddContactForm({ contacts, setContacts }) {
         }
     }
     const saveNewContact = async () => {
-        const response = await axios.post("http://localhost:3001/contacts", formData);
+        const response = await axios.post("https://phone-book2023.fly.dev/api/contacts", formData);
         setContacts(contacts.concat(response.data))
     }
     const handleFormSubmission = async (event) => {
