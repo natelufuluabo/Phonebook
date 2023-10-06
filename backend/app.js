@@ -1,9 +1,11 @@
+/* eslint-disable max-len */
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const loggerFunc = require('./utils/logger');
+const config = require('./utils/config');
 
 const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');
@@ -14,11 +16,10 @@ dotenv.config();
 app.use(cors());
 
 const mongoose = require('mongoose');
-const url = `${process.env.MONGODB_URI}`;
-mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
+const url = `${config.MONGODB_URI}`;
+mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
+    .then(() => loggerFunc.info('Connected to MongoDB'))
+    .catch((error) => logger.error('Error connecting to MongoDB:', error.message));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
