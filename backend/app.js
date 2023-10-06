@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const loggerFunc = require('./utils/logger');
 
 const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');
@@ -33,7 +34,7 @@ const unknownEndpoint = (request, response) => {
 app.use(unknownEndpoint);
 
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message);
+  loggerFunc.error(error.message);
 
   if (error.name === 'CastError') {
     return response.status(400).send({error: 'malformatted id'});
@@ -45,4 +46,5 @@ const errorHandler = (error, request, response, next) => {
 };
 
 app.use(errorHandler);
+
 module.exports = app;

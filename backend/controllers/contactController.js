@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 const Contact = require('../models/Contact');
 
-exports.contact_list = function(req, res) {
+exports.contactList = function(req, res) {
   Contact.find()
       // eslint-disable-next-line camelcase
       .then((contact_list) => {
@@ -13,7 +13,7 @@ exports.contact_list = function(req, res) {
       });
 };
 
-exports.contact_detail = function(req, res, next) {
+exports.contactDetail = function(req, res, next) {
   Contact.findById(req.params.id)
       .then((contact) => {
         if (contact) return res.json(contact);
@@ -22,7 +22,7 @@ exports.contact_detail = function(req, res, next) {
       .catch((err) => next(err));
 };
 
-exports.contact_create = function(req, res) {
+exports.contactCreate = function(req, res) {
   Contact.findOne({
     $or: [
       {phone_number: req.body.phone_number},
@@ -59,7 +59,7 @@ exports.contact_create = function(req, res) {
       });
 };
 
-exports.contact_delete = function(req, res) {
+exports.contactDelete = function(req, res) {
   Contact.findByIdAndRemove(req.params.id)
       .then(() => {
         res.status(200).json({message: 'Contact deleted successfully.'});
@@ -71,7 +71,7 @@ exports.contact_delete = function(req, res) {
       });
 };
 
-exports.contact_update = function(req, res, next) {
+exports.contactUpdate = function(req, res, next) {
   const contact = new Contact({
     _id: req.params.id,
     first_name: req.body.first_name,

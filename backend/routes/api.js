@@ -1,15 +1,17 @@
+/* eslint-disable new-cap */
+/* eslint-disable max-len */
 const express = require('express');
 const router = express.Router();
-const { contact_list, contact_detail, contact_create, contact_delete, contact_update } = require('../controllers/contactController')
+const {contactList, contactDetail, contactCreate, contactDelete, contactUpdate} = require('../controllers/contactController');
 
-router.get('/contacts', contact_list);
+router.get('/contacts', contactList);
 
-router.get('/contacts/:id', contact_detail);
+router.get('/contacts/:id', contactDetail);
 
-router.post('/contacts', contact_create);
+router.post('/contacts', contactCreate);
 
-router.put('/contacts/:id', contact_update);
+router.put('/contacts/:id', contactUpdate);
 
-router.delete('/contacts/:id', contact_delete);
+router.delete('/contacts/:id', contactDelete);
 
 module.exports = router;
