@@ -48,10 +48,6 @@ test('all contacts are returned', async () => {
   expect(response.body).toHaveLength(initialContacts.length);
 });
 
-afterAll(async () => {
-  await mongoose.connection.close();
-});
-
 test('contact can be added successfully', async () => {
   const newContact = {
     'first_name': 'Huguesse',
@@ -95,4 +91,8 @@ test('database cannot contain 2 contacts with the same email and/or phone number
 
   const response = await api.get('/api/contacts');
   expect(response.body).toHaveLength(initialContacts.length);
+});
+
+afterAll(async () => {
+  await mongoose.connection.close();
 });

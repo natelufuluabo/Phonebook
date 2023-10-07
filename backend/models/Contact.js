@@ -12,7 +12,6 @@ const contactSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
   },
   city: String,
   province: String,
@@ -20,7 +19,6 @@ const contactSchema = new mongoose.Schema({
   phone_number: {
     type: String,
     required: true,
-    unique: true,
   },
 });
 

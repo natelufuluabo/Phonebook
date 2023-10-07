@@ -15,13 +15,16 @@ exports.contactList = async function(req, res) {
   //     });
 };
 
-exports.contactDetail = function(req, res, next) {
-  Contact.findById(req.params.id)
-      .then((contact) => {
-        if (contact) return res.json(contact);
-        return response.status(404).end();
-      })
-      .catch((err) => next(err));
+exports.contactDetail = async function(req, res, next) {
+  const contact = await Contact.findById(req.params.id);
+  if (contact) return res.json(contact);
+  return response.status(404).end();
+  // Contact.findById(req.params.id)
+  //     .then((contact) => {
+  //       if (contact) return res.json(contact);
+  //       return response.status(404).end();
+  //     })
+  //     .catch((err) => next(err));
 };
 
 exports.contactCreate = async function(req, res) {
@@ -85,20 +88,22 @@ exports.contactCreate = async function(req, res) {
   //     });
 };
 
-exports.contactDelete = function(req, res) {
-  Contact.findByIdAndRemove(req.params.id)
-      .then(() => {
-        res.status(200).json({message: 'Contact deleted successfully.'});
-      })
-      .catch((err) => {
-        if (err) {
-          return res.status(500).json({error: 'An error occurred while deleting the contact.'});
-        }
-      });
+exports.contactDelete = async function(req, res) {
+  await Contact.findByIdAndRemove(req.params.id);
+  return res.status(200).json({message: 'Contact deleted successfully.'});
+  // Contact.findByIdAndRemove(req.params.id)
+  //     .then(() => {
+  //       res.status(200).json({message: 'Contact deleted successfully.'});
+  //     })
+  //     .catch((err) => {
+  //       if (err) {
+  //         return res.status(500).json({error: 'An error occurred while deleting the contact.'});
+  //       }
+  //     });
 };
 
-exports.contactUpdate = function(req, res, next) {
-  const contact = new Contact({
+exports.contactUpdate = async function(req, res, next) {
+  const contact = {
     _id: req.params.id,
     first_name: req.body.first_name,
     last_name: req.body.last_name,
@@ -107,15 +112,19 @@ exports.contactUpdate = function(req, res, next) {
     province: req.body.province,
     groups: req.body.groups,
     phone_number: req.body.phone_number,
-  });
+  };
+  const updatedContact = await Contact.findByIdAndUpdate(req.params.id, contact, {new: true});
+  if (!updatedContact) {
+    return res.status(404).json({error: 'Contact not found.'});
+  }
+  return res.status(200).json(updatedContact);
+  // Contact.findByIdAndUpdate(req.params.id, contact, {new: true})
+  //     .then((contactUpdated) => {
+  //       if (!contactUpdated) {
+  //         return res.status(404).json({error: 'Contact not found.'});
+  //       }
 
-  Contact.findByIdAndUpdate(req.params.id, contact, {new: true, runValidators: true, context: 'query'})
-      .then((contactUpdated) => {
-        if (!contactUpdated) {
-          return res.status(404).json({error: 'Contact not found.'});
-        }
-
-        return res.status(200).json(contactUpdated);
-      })
-      .catch((err) => next(err));
+  //       return res.status(200).json(contactUpdated);
+  //     })
+  //     .catch((err) => next(err));
 };
