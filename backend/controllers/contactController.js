@@ -1,16 +1,18 @@
 /* eslint-disable max-len */
 const Contact = require('../models/Contact');
 
-exports.contactList = function(req, res) {
-  Contact.find()
-      // eslint-disable-next-line camelcase
-      .then((contact_list) => {
-        return res.json(contact_list);
-      })
-      .catch((err) => {
-        // eslint-disable-next-line max-len
-        if (err) return res.status(500).json({error: 'An error occurred while fetching contacts list.'});
-      });
+exports.contactList = async function(req, res) {
+  const contacts = await Contact.find();
+  return res.json(contacts);
+  // Contact.find()
+  //     // eslint-disable-next-line camelcase
+  //     .then((contact_list) => {
+  //       return res.json(contact_list);
+  //     })
+  //     .catch((err) => {
+  //       // eslint-disable-next-line max-len
+  //       if (err) return res.status(500).json({error: 'An error occurred while fetching contacts list.'});
+  //     });
 };
 
 exports.contactDetail = function(req, res, next) {
@@ -22,41 +24,65 @@ exports.contactDetail = function(req, res, next) {
       .catch((err) => next(err));
 };
 
-exports.contactCreate = function(req, res) {
-  Contact.findOne({
+exports.contactCreate = async function(req, res) {
+  const contact = await Contact.findOne({
     $or: [
       {phone_number: req.body.phone_number},
       {email: req.body.email},
     ],
-  })
-      .then((contact) => {
-        if (contact) {
-          return res.status(400).json({
-            error: 'Phone number and/or email already exists',
-          });
-        }
-        const newContact = new Contact({
-          first_name: req.body.first_name,
-          last_name: req.body.last_name,
-          email: req.body.email,
-          city: req.body.city,
-          province: req.body.province,
-          groups: req.body.groups,
-          phone_number: req.body.phone_number,
-        });
-        newContact.save()
-            .then((result) => {
-              return res.json(result);
-            })
-            .catch((error) => {
-              return res.status(500).json({error: 'An error occurred while saving contact detail.'});
-            });
-      })
-      .catch((err) => {
-        if (err) {
-          return res.status(500).json({error: 'An error occurred while fetching the contact.'});
-        }
-      });
+  });
+  if (contact) {
+    return res.status(400).json({
+      error: 'Phone number and/or email already exists',
+    });
+  }
+  const newContact = new Contact({
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
+    email: req.body.email,
+    city: req.body.city,
+    province: req.body.province,
+    groups: req.body.groups,
+    phone_number: req.body.phone_number,
+  });
+
+  const newSavedContact = await newContact.save();
+
+  return res.status(201).json(newSavedContact);
+  // Contact.findOne({
+  //   $or: [
+  //     {phone_number: req.body.phone_number},
+  //     {email: req.body.email},
+  //   ],
+  // })
+  //     .then((contact) => {
+  //       if (contact) {
+  //         return res.status(400).json({
+  //           error: 'Phone number and/or email already exists',
+  //         });
+  //       }
+  //       const newContact = new Contact({
+  //         first_name: req.body.first_name,
+  //         last_name: req.body.last_name,
+  //         email: req.body.email,
+  //         city: req.body.city,
+  //         province: req.body.province,
+  //         groups: req.body.groups,
+  //         phone_number: req.body.phone_number,
+  //       });
+  //       newContact.save()
+  //           .then((result) => {
+  //             return res.json(result);
+  //           })
+  //           .catch((error) => {
+  //             return res.status(500).json({error: 'An error occurred while saving contact detail.'});
+  //           });
+  //     })
+  //     .catch((err) => {
+  //       if (err) {
+  //         return res.status(500).json({error: 'An error occurred while fetching the contact.'});
+  //       }
+  //     });
 };
 
 exports.contactDelete = function(req, res) {
