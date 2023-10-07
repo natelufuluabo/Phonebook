@@ -1,10 +1,11 @@
 /* eslint-disable max-len */
 const express = require('express');
+const config = require('./utils/config');
+require('express-async-errors');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const logger = require('./utils/logger');
-const config = require('./utils/config');
 const middleware = require('./utils/middleware');
 
 const indexRouter = require('./routes/index');
