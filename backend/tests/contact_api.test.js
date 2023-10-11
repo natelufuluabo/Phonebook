@@ -93,6 +93,24 @@ test('database cannot contain 2 contacts with the same email and/or phone number
   expect(response.body).toHaveLength(initialContacts.length);
 });
 
+test('specific contact is returned', async () => {
+  const response = await api.get('/api/contacts');
+  const data = response.body[0];
+
+  const result = await api
+      .get(`/api/contacts/${data.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+  expect(result.body).toEqual(data);
+});
+
+test('invalid returns no contact', async () => {
+  await api
+      .get('/api/notes/111111adfrq2123')
+      .expect(404);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
