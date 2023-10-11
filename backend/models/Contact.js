@@ -20,6 +20,10 @@ const contactSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  ownerID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
 });
 
 contactSchema.set('toJSON', {
