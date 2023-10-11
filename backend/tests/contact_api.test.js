@@ -111,6 +111,18 @@ test('invalid returns no contact', async () => {
       .expect(404);
 });
 
+test('delete contact', async () => {
+  const response = await api.get('/api/contacts');
+  const data = response.body[0];
+
+  await api
+      .delete(`/api/contacts/${data.id}`)
+      .expect(204);
+
+  const result = await api.get('/api/contacts');
+  expect(result.body).toHaveLength(response.body.length - 1);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });

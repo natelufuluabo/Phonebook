@@ -41,7 +41,7 @@ exports.contactCreate = async function(req, res) {
 
 exports.contactDelete = async function(req, res) {
   await Contact.findByIdAndRemove(req.params.id);
-  return res.status(200).json({message: 'Contact deleted successfully.'});
+  return res.status(204).json({message: 'Contact deleted successfully.'});
 };
 
 exports.contactUpdate = async function(req, res, next) {
