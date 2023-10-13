@@ -51,6 +51,19 @@ test('user can be saved in the database', async () => {
   expect(response.body).toHaveLength(3);
 });
 
+test('database cannot contain 2 users with the same username', async () => {
+   const newUser = {
+    'username': 'aircongo',
+    'name': 'Nathan Lufuluabo',
+    'password': 'Congo1960!!',
+  };
+
+  await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
