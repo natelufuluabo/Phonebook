@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const {contactList, contactDetail, contactCreate, contactDelete, contactUpdate} = require('../controllers/contactController');
-const {userCreate} = require('../controllers/userController');
+const {userList, userCreate} = require('../controllers/userController');
 
 router.get('/contacts', contactList);
 
@@ -14,6 +14,8 @@ router.post('/contacts', contactCreate);
 router.put('/contacts/:id', contactUpdate);
 
 router.delete('/contacts/:id', contactDelete);
+
+router.get('/user', userList);
 
 router.post('/user', userCreate);
 
