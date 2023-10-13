@@ -27,6 +27,13 @@ beforeEach(async () => {
   }
 });
 
+test('users are returned as json', async () => {
+  await api
+      .get('/api/users')
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+});
+
 test('user can be saved in the database', async () => {
   const newUser = {
     'username': 'pico_pico',
