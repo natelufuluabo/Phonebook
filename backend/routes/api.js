@@ -15,8 +15,8 @@ router.put('/contacts/:id', contactUpdate);
 
 router.delete('/contacts/:id', contactDelete);
 
-router.get('/user', userList);
+router.get('/users', userList);
 
-router.post('/user', userCreate);
+router.post('/users', userCreate);
 
 module.exports = router;

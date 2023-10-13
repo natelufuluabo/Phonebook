@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 
 exports.userList = async function(req, res) {
   const users = await User.find({});
-  response.json(users);
+  return res.json(users);
 };
 
 exports.userCreate = async function(req, res) {
@@ -20,5 +20,5 @@ exports.userCreate = async function(req, res) {
 
   const savedUser = await user.save();
 
-  response.status(201).json(savedUser);
+  res.status(201).json(savedUser);
 };

@@ -2,7 +2,7 @@
 const Contact = require('../models/Contact');
 
 exports.contactList = async function(req, res) {
-  const contacts = await Contact.find();
+  const contacts = await Contact.find({});
   return res.json(contacts);
 };
 
