@@ -2,7 +2,7 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 
 exports.userList = async function(req, res) {
-  const users = await User.find({});
+  const users = await User.find({}).populate('contacts');
   return res.status(200).json(users);
 };
 

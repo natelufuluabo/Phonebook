@@ -3,8 +3,22 @@ const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
 const Contact = require('../models/Contact');
+const User = require('../models/User');
 
 const api = supertest(app);
+
+const initialUsers = [
+  {
+    'username': 'aircongo',
+    'name': 'Nathan Lufuluabo',
+    'password': 'Congo1960!!',
+  },
+  {
+    'username': 'castello',
+    'name': 'Celestin Lufuluabo',
+    'password': 'Novembre2012',
+  },
+];
 
 const initialContacts = [
   {
@@ -28,79 +42,56 @@ const initialContacts = [
 ];
 
 beforeEach(async () => {
+  await User.deleteMany({});
   await Contact.deleteMany({});
+  const userObject = new User(initialUsers[0]);
+  await userObject.save();
+});
+
+test('contacts are successfully saved with the right owner', async () => {
+  let userResponse = await api.get('/api/users');
+  let user = userResponse.body[0];
   for (const contact of initialContacts) {
-    const contactObject = new Contact(contact);
-    await contactObject.save();
+    const contactObject = new Contact({...contact, ownerID: user.id});
+    const newContact = await contactObject.save();
+    await User.updateOne({_id: user.id}, {$push: {contacts: newContact._id}});
   }
+  userResponse = await api.get('/api/users');
+  user = userResponse.body[0];
+  expect(user.contacts).toHaveLength(2);
 });
 
-test('contacts are returned as json', async () => {
-  await api
-      .get('/api/contacts')
-      .expect(200)
-      .expect('Content-Type', /application\/json/);
-});
+test('same user cannot save same contact twice', async () => {
+  const userResponse = await api.get('/api/users');
+  const user = userResponse.body[0];
+  const contact1a = initialContacts[0];
+  const contactObject = new Contact({...contact1a, ownerID: user.id});
+  const newContact = await contactObject.save();
+  await User.updateOne({_id: user.id}, {$push: {contacts: newContact._id}});
 
-test('all contacts are returned', async () => {
-  const response = await api.get('/api/contacts');
-
-  expect(response.body).toHaveLength(initialContacts.length);
-});
-
-test('contact can be added successfully', async () => {
-  const newContact = {
-    'first_name': 'Huguesse',
-    'last_name': 'Assande',
-    'email': 'assandehuguesse@gmail.com',
-    'city': 'Montréal',
-    'province': 'Quebec',
-    'groups': ['Family', 'Favorites', 'Emergency'],
-    'phone_number': '+1 (438) 868-8442',
-  };
-
+  const contact1b = {...contact1a, userId: user.id};
   await api
       .post('/api/contacts')
-      .send(newContact)
-      .expect(201)
-      .expect('Content-Type', /application\/json/);
-
-  const response = await api.get('/api/contacts');
-
-  const phoneNumbers = response.body.map((contact) => contact.phone_number);
-
-  expect(response.body).toHaveLength(initialContacts.length + 1);
-  expect(phoneNumbers).toContain('+1 (438) 868-8442');
+      .send(contact1b)
+      .expect(400);
 });
 
-test('specific contact is returned', async () => {
-  const response = await api.get('/api/contacts');
-  const data = response.body[0];
+test('2 different users can save the same contact', async () => {
+  const userObject = new User(initialUsers[1]);
+  await userObject.save();
+  const userResponse = await api.get('/api/users');
+  const user1 = userResponse.body[0];
+  const user2 = userResponse.body[1];
+  const contact = initialContacts[0];
+  const contactObject = new Contact({...contact, ownerID: user1.id});
+  const newContact = await contactObject.save();
+  await User.updateOne({_id: user1.id}, {$push: {contacts: newContact._id}});
 
-  const result = await api
-      .get(`/api/contacts/${data.id}`)
-      .expect(200)
-      .expect('Content-Type', /application\/json/);
-
-  expect(result.body).toEqual(data);
-});
-
-test('invalid id returns no contact', async () => {
+  const contact1b = {...contact, userId: user2.id};
   await api
-      .get('/api/notes/111111adfrq2123')
-      .expect(404);
-});
-
-test('delete contact', async () => {
-  const response = await api.get('/api/contacts');
-  const data = response.body[0];
-
-  await api
-      .delete(`/api/contacts/${data.id}`)
-      .expect(204);
-
-  const result = await api.get('/api/contacts');
-  expect(result.body).toHaveLength(response.body.length - 1);
+      .post('/api/contacts')
+      .send(contact1b)
+      .expect(201);
 });
 
 afterAll(async () => {

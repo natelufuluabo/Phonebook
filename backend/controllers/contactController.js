@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 const Contact = require('../models/Contact');
+const User = require('../models/User');
 
 exports.contactList = async function(req, res) {
   const contacts = await Contact.find({});
@@ -13,17 +14,27 @@ exports.contactDetail = async function(req, res, next) {
 };
 
 exports.contactCreate = async function(req, res) {
+  const body = req.body;
+  const user = await User.findById(body.userId).populate('contacts', {email: 1, phone_number: 1});
+  const contactExists = user.contacts.find((contact) => contact.email === body.email || contact.phone_number === body.phone_number);
+  if (contactExists) {
+    return res.status(400).json({message: 'Contact exists already'});
+  }
   const newContact = new Contact({
-    first_name: req.body.first_name,
-    last_name: req.body.last_name,
-    email: req.body.email,
-    city: req.body.city,
-    province: req.body.province,
-    groups: req.body.groups,
-    phone_number: req.body.phone_number,
+    first_name: body.first_name,
+    last_name: body.last_name,
+    email: body.email,
+    city: body.city,
+    province: body.province,
+    groups: body.groups,
+    phone_number: body.phone_number,
+    ownerID: user.id,
   });
 
   const newSavedContact = await newContact.save();
+
+  user.contacts = user.contacts.concat(newSavedContact._id);
+  await user.save();
 
   return res.status(201).json(newSavedContact);
 };
