@@ -52,7 +52,7 @@ test('user can be saved in the database', async () => {
 });
 
 test('database cannot contain 2 users with the same username', async () => {
-   const newUser = {
+  const newUser = {
     'username': 'aircongo',
     'name': 'Nathan Lufuluabo',
     'password': 'Congo1960!!',

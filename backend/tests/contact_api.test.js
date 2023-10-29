@@ -73,26 +73,6 @@ test('contact can be added successfully', async () => {
   expect(phoneNumbers).toContain('+1 (438) 868-8442');
 });
 
-test('database cannot contain 2 contacts with the same email and/or phone number', async () => {
-  const newContact = {
-    'first_name': 'Huguesse',
-    'last_name': 'Assande',
-    'email': 'natelufuluabo@yahoo.ca',
-    'city': 'Montréal',
-    'province': 'Quebec',
-    'groups': ['Family', 'Favorites', 'Emergency'],
-    'phone_number': '+1 (438) 868-8442',
-  };
-
-  await api
-      .post('/api/contacts')
-      .send(newContact)
-      .expect(400);
-
-  const response = await api.get('/api/contacts');
-  expect(response.body).toHaveLength(initialContacts.length);
-});
-
 test('specific contact is returned', async () => {
   const response = await api.get('/api/contacts');
   const data = response.body[0];
@@ -105,7 +85,7 @@ test('specific contact is returned', async () => {
   expect(result.body).toEqual(data);
 });
 
-test('invalid returns no contact', async () => {
+test('invalid id returns no contact', async () => {
   await api
       .get('/api/notes/111111adfrq2123')
       .expect(404);

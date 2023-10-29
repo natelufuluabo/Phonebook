@@ -13,17 +13,6 @@ exports.contactDetail = async function(req, res, next) {
 };
 
 exports.contactCreate = async function(req, res) {
-  const contact = await Contact.findOne({
-    $or: [
-      {phone_number: req.body.phone_number},
-      {email: req.body.email},
-    ],
-  });
-  if (contact) {
-    return res.status(400).json({
-      error: 'Phone number and/or email already exists',
-    });
-  }
   const newContact = new Contact({
     first_name: req.body.first_name,
     last_name: req.body.last_name,
