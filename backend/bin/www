@@ -8,13 +8,13 @@
 const app = require('../app');
 const debug = require('debug')('backend:server');
 const http = require('http');
-const config = require('../utils/config');
+const {PORT} = require('../utils/config');
 
 /**
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(config.PORT || '3000');
+const port = normalizePort(PORT || '3000');
 app.set('port', port);
 
 /**

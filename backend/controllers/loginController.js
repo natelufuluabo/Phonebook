@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const {SECRET} = require('../utils/config');
 
 exports.loginUser = async function(request, response) {
   const {username, password} = request.body;
@@ -21,7 +22,7 @@ exports.loginUser = async function(request, response) {
     id: user._id,
   };
 
-  const token = jwt.sign(userForToken, process.env.SECRET);
+  const token = jwt.sign(userForToken, SECRET);
 
   response
       .status(200)

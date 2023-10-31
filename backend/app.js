@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 const express = require('express');
-const config = require('./utils/config');
+const {MONGODB_URI} = require('./utils/config');
 require('express-async-errors');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
@@ -14,7 +14,7 @@ const apiRouter = require('./routes/api');
 const app = express();
 
 logger.info('connecting to MongoDB');
-mongoose.connect(config.MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => logger.info('Connected to MongoDB'))
     .catch((error) => logger.error('Error connecting to MongoDB:', error.message));
 
