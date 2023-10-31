@@ -1,4 +1,6 @@
 /* eslint-disable max-len */
+const jwt = require('jsonwebtoken');
+const {SECRET} = require('../utils/config');
 const Contact = require('../models/Contact');
 const User = require('../models/User');
 
@@ -13,8 +15,20 @@ exports.contactDetail = async function(req, res, next) {
   return response.status(404).end();
 };
 
+const getTokenFrom = (request) => {
+  const authorization = request.get('authorization');
+  if (authorization && authorization.startsWith('Bearer ')) {
+    return authorization.replace('Bearer ', '');
+  }
+  return null;
+};
+
 exports.contactCreate = async function(req, res) {
   const body = req.body;
+  const decodedToken = jwt.verify(getTokenFrom(request), SECRET);
+  if (!decodedToken.id) {
+    return response.status(401).json({error: 'token invalid'});
+  }
   const user = await User.findById(body.userId).populate('contacts', {email: 1, phone_number: 1});
   const contactExists = user.contacts.find((contact) => contact.email === body.email || contact.phone_number === body.phone_number);
   if (contactExists) {
