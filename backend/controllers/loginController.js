@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
@@ -6,7 +7,7 @@ const {SECRET} = require('../utils/config');
 exports.loginUser = async function(request, response) {
   const {username, password} = request.body;
 
-  const user = await User.findOne({username});
+  const user = await User.findOne({username}).populate('contacts');
 
   const passwordCorrect = user === null ?
     false :
@@ -27,5 +28,5 @@ exports.loginUser = async function(request, response) {
 
   response
       .status(200)
-      .json({token, username: user.username, name: user.name});
+      .json({token, username: user.username, name: user.name, contacts: user.contacts});
 };
