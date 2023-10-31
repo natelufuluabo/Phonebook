@@ -44,53 +44,73 @@ const initialContacts = [
 beforeEach(async () => {
   await User.deleteMany({});
   await Contact.deleteMany({});
-  const userObject = new User(initialUsers[0]);
-  await userObject.save();
+});
+
+test('only logged in user can save new contact', async () => {
+  await api.post('/api/users').send(initialUsers[0]);
+  const body = {
+    'username': 'aircongo',
+    'password': 'Congo1960!!',
+  };
+  const loginResponse = await api.post('/api/login').send(body);
+
+  await api
+      .post('/api/contacts')
+      .set('Authorization', `Bearer ${loginResponse.body.token}`)
+      .send(initialContacts[0])
+      .expect(201);
 });
 
 test('contacts are successfully saved with the right owner', async () => {
-  let userResponse = await api.get('/api/users');
-  let user = userResponse.body[0];
-  for (const contact of initialContacts) {
-    const contactObject = new Contact({...contact, ownerID: user.id});
-    const newContact = await contactObject.save();
-    await User.updateOne({_id: user.id}, {$push: {contacts: newContact._id}});
-  }
-  userResponse = await api.get('/api/users');
-  user = userResponse.body[0];
-  expect(user.contacts).toHaveLength(2);
+  const newUser = await api.post('/api/users').send(initialUsers[0]);
+  const body = {
+    'username': 'aircongo',
+    'password': 'Congo1960!!',
+  };
+  const loginResponse = await api.post('/api/login').send(body);
+  const newContact = await api.post('/api/contacts').set('Authorization', `Bearer ${loginResponse.body.token}`).send(initialContacts[0]);
+  expect(newContact.ownerID).toBe(newUser.id);
 });
 
 test('same user cannot save same contact twice', async () => {
-  const userResponse = await api.get('/api/users');
-  const user = userResponse.body[0];
-  const contact1a = initialContacts[0];
-  const contactObject = new Contact({...contact1a, ownerID: user.id});
-  const newContact = await contactObject.save();
-  await User.updateOne({_id: user.id}, {$push: {contacts: newContact._id}});
+  await api.post('/api/users').send(initialUsers[0]);
+  const body = {
+    'username': 'aircongo',
+    'password': 'Congo1960!!',
+  };
+  const loginResponse = await api.post('/api/login').send(body);
+  await api.post('/api/contacts').set('Authorization', `Bearer ${loginResponse.body.token}`).send(initialContacts[0]);
 
-  const contact1b = {...contact1a, userId: user.id};
   await api
       .post('/api/contacts')
-      .send(contact1b)
+      .set('Authorization', `Bearer ${loginResponse.body.token}`)
+      .send(initialContacts[0])
       .expect(400);
 });
 
 test('2 different users can save the same contact', async () => {
-  const userObject = new User(initialUsers[1]);
-  await userObject.save();
-  const userResponse = await api.get('/api/users');
-  const user1 = userResponse.body[0];
-  const user2 = userResponse.body[1];
-  const contact = initialContacts[0];
-  const contactObject = new Contact({...contact, ownerID: user1.id});
-  const newContact = await contactObject.save();
-  await User.updateOne({_id: user1.id}, {$push: {contacts: newContact._id}});
+  await api.post('/api/users').send(initialUsers[0]);
+  await api.post('/api/users').send(initialUsers[1]);
 
-  const contact1b = {...contact, userId: user2.id};
+  const body1 = {
+    'username': 'aircongo',
+    'password': 'Congo1960!!',
+  };
+  const loginResponse1 = await api.post('/api/login').send(body1);
   await api
       .post('/api/contacts')
-      .send(contact1b)
+      .set('Authorization', `Bearer ${loginResponse1.body.token}`)
+      .send(initialContacts[0]);
+
+  const body2 = {
+    'username': 'castello',
+    'password': 'Novembre2012',
+  };
+  const loginResponse2 = await api.post('/api/login').send(body2);
+  await api
+      .post('/api/contacts')
+      .set('Authorization', `Bearer ${loginResponse2.body.token}`)
+      .send(initialContacts[0])
       .expect(201);
 });
 

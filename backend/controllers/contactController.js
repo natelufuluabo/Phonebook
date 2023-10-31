@@ -25,11 +25,11 @@ const getTokenFrom = (request) => {
 
 exports.contactCreate = async function(req, res) {
   const body = req.body;
-  const decodedToken = jwt.verify(getTokenFrom(request), SECRET);
+  const decodedToken = jwt.verify(getTokenFrom(req), SECRET);
   if (!decodedToken.id) {
     return response.status(401).json({error: 'token invalid'});
   }
-  const user = await User.findById(body.userId).populate('contacts', {email: 1, phone_number: 1});
+  const user = await User.findById(decodedToken.id).populate('contacts', {email: 1, phone_number: 1});
   const contactExists = user.contacts.find((contact) => contact.email === body.email || contact.phone_number === body.phone_number);
   if (contactExists) {
     return res.status(400).json({message: 'Contact exists already'});
