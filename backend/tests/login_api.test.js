@@ -21,13 +21,10 @@ const initialUsers = [
 
 beforeEach(async () => {
   await User.deleteMany({});
-  for (const user of initialUsers) {
-    const contactObject = new User(user);
-    await contactObject.save();
-  }
 });
 
 test('user can login successfully with the right credentials', async () => {
+  await api.post('/api/users').send(initialUsers[0]);
   const body = {
     'username': 'aircongo',
     'password': 'Congo1960!!',
@@ -35,10 +32,12 @@ test('user can login successfully with the right credentials', async () => {
   await api
       .post('/api/login')
       .send(body)
-      .expect(200);
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
 });
 
 test('user cannot login successfully with the wrong credentials', async () => {
+  await api.post('/api/users').send(initialUsers[0]);
   const body = {
     'username': 'aircongo',
     'password': 'Congo196!!',
