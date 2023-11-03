@@ -23,6 +23,7 @@
     "mongoose": "^7.5.4",
     "mongoose-unique-validator": "^4.0.0",
     "morgan": "~1.9.1",
+    "node": "^21.1.0",
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {

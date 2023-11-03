@@ -5,6 +5,7 @@ import axios from 'axios';
 import {useState, useEffect} from 'react';
 import Navbar from './components/Navbar';
 import ContactList from './components/ContactList';
+import LoginForm from './components/LoginForm';
 // import AddContactForm from './components/AddContactForm';
 // import ContactCard from './components/ContactCard';
 
@@ -26,7 +27,8 @@ function App() {
   return (
     <>
       <Navbar />
-      <ContactList contacts={contacts} />
+      <LoginForm />
+      {/* <ContactList contacts={contacts} /> */}
       {/* <AddContactForm contacts={contacts} setContacts={setContacts} /> */}
       {/* <ContactCard contact={contact} setContact={setContact} /> */}
     </>
