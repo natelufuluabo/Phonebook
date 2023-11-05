@@ -4,6 +4,7 @@
 /* eslint-disable react/prop-types */
 import '../app.scss';
 import {useState} from 'react';
+import {Link} from 'react-router-dom';
 export default function ContactList({contacts}) {
   contacts.sort((a, b) => {
     const nameA = a.last_name.toUpperCase();
@@ -44,14 +45,17 @@ export default function ContactList({contacts}) {
       <ul className="list-group list-group-flush overflow-scroll">
         {
           contactsToShow.map((contact) => {
+            const link = `/contacts/${contact.id}`;
             return (
-              <li className="list-group-item d-flex justify-content-between align-items-center" key={contact.id}>
-                {contact.last_name}, {contact.first_name}
-                <div className='d-flex gap-3'>
-                  <i className="fa-solid fa-pen"></i>
-                  <i className="fa-solid fa-trash"></i>
-                </div>
-              </li>
+              <Link key={contact.id} to={link}>
+                <li className="list-group-item d-flex justify-content-between align-items-center" key={contact.id}>
+                  {contact.last_name}, {contact.first_name}
+                  <div className='d-flex gap-3'>
+                    <i className="fa-solid fa-pen"></i>
+                    <i className="fa-solid fa-trash"></i>
+                  </div>
+                </li>
+              </Link>
             );
           })
         }
